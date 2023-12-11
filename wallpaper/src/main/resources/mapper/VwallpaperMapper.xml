@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wallpaper.mapper.VwallpaperMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.wallpaper.entity.Vwallpaper">
+        <id column="vwp_id" property="vwpId" />
+        <result column="name" property="name" />
+        <result column="create_id" property="createId" />
+        <result column="price" property="price" />
+        <result column="type" property="type" />
+        <result column="path" property="path" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        vwp_id, name, create_id, price, type, path
+    </sql>
+
+</mapper>

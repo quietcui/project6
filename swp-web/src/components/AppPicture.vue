@@ -8,7 +8,7 @@
                 <button @click="toupload">上传</button>
                 <div class="userimgbox">
                     <img src="../assets/tou1.jpg" alt="" width="25" @click="touser">
-                    <div>{{ this.$globalVar.NAME }}</div>
+                    <div>{{ this.NAME }}</div>
                 </div>
             </div>
         </div>
@@ -37,7 +37,22 @@ export default {
             name: '',
             password: '',
             picture: '',
+            NAME:'',
+            BALANCE:'',
+            USERID:'',
+            PASSWORD:'',
         }
+    },
+    mounted() {
+      // 在组件加载时自动执行的函数
+      this.NAME=sessionStorage.getItem('NAME')
+      this.USERID=sessionStorage.getItem('USERID')
+      this.BALANCE=sessionStorage.getItem('BALANCE')
+      this.PASSWORD=sessionStorage.getItem('PASSWORD')
+      console.log(this.NAME)
+      console.log(this.USERID)
+      console.log(this.PASSWoRD)
+      console.log(this.BALANCE)
     },
     methods: {
         touser() {

@@ -8,16 +8,16 @@
                 <button @click="toupload">上传</button>
                 <div class="userimgbox">
                     <img src="../assets/tou1.jpg" alt="" width="25" @click="refresh">
-                    <div>{{ this.$globalVar.NAME }}</div>
+                    <div>{{ this.NAME }}</div>
                 </div>
             </div>
         </div>
         <div class="profile">
             <img src="https://picsum.photos/100/100?random=1">
             <div class="profile-info">
-                <p>用户名: <span>{{ this.$globalVar.NAME }}</span></p>
-                <p>账号: <span>{{ this.$globalVar.USERID }}</span></p>
-                <p>余额: <span>￥{{ this.$globalVar.BALANCE }}</span></p>
+                <p>用户名: <span>{{ this.NAME }}</span></p>
+                <p>账号: <span>{{ this.USERID }}</span></p>
+                <p>余额: <span>￥{{ this.BALANCE }}</span></p>
             </div>
         </div>
         <div class="tabs">
@@ -50,12 +50,24 @@ export default {
     components: {},
     data() {
         return {
-            name: ''
+            name: '',
+            NAME:'',
+            BALANCE:'',
+            USERID:'',
+            PASSWORD:'',
         }
     },
     mounted() {
         // 在组件加载时自动执行的函数
         this.yourFunction();
+        this.NAME=sessionStorage.getItem('NAME')
+        this.USERID=sessionStorage.getItem('USERID')
+        this.BALANCE=sessionStorage.getItem('BALANCE')
+        this.PASSWORD=sessionStorage.getItem('PASSWORD')
+        console.log(this.NAME)
+        console.log(this.USERID)
+        console.log(this.PASSWoRD)
+        console.log(this.BALANCE)
     },
     methods: {
         yourFunction() {

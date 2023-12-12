@@ -49,12 +49,10 @@ export default {
             console.log("返回的数据：", result.data);
             console.log("总记录数：", result.total);
 
-
-            self.$globalVar.NAME = result.data.name;
-            self.$globalVar.BALANCE = result.data.balance;
-            self.$globalVar.PASSWORD = result.data.password;
-            self.$globalVar.USERID = result.data.userId;
-            console.log(self.$globalVar);
+            sessionStorage.setItem('NAME', result.data.name)
+            sessionStorage.setItem('USERID', result.data.userId)
+            sessionStorage.setItem('BALANCE', result.data.balance)
+            sessionStorage.setItem('PASSWORD', result.data.password)
 
             self.$router.push("/index");
           } else if (result.code === 400) {

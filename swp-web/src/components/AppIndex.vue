@@ -10,7 +10,7 @@
                 <button @click="toupload">上传</button>
                 <div class="userimgbox">
                     <img src="../assets/tou1.jpg" alt="" width="25" @click="touser">
-                    <div>{{ this.$globalVar.NAME }}</div>
+                    <div>{{ this.NAME }}</div>
                 </div>
             </div>
         </div>
@@ -20,7 +20,7 @@
         </div>
         <br>
         <div class="label">
-            最新 动漫 科技 风景
+            最新 风景 动物 美女 动漫 游戏 电影 明星 科幻 其他
         </div>
         <div class="gallery">
             <img src="https://picsum.photos/300/200?random=1" @click="topicture('https://picsum.photos/300/200?random=1')">
@@ -60,12 +60,27 @@ export default {
     name: "AppIndex",
     data() {
         return {
+            NAME:'',
+            BALANCE:'',
+            USERID:'',
+            PASSWORD:'',
             isCollapse: false,
             aside_width: '200px',
             icon: 'el-icon-s-fold',
             picturesrc: '',
             imageName: "", //用于保存图片的文件名
         }
+    },
+    mounted() {
+      // 在组件加载时自动执行的函数
+      this.NAME=sessionStorage.getItem('NAME')
+      this.USERID=sessionStorage.getItem('USERID')
+      this.BALANCE=sessionStorage.getItem('BALANCE')
+      this.PASSWORD=sessionStorage.getItem('PASSWORD')
+      console.log(this.NAME)
+      console.log(this.USERID)
+      console.log(this.PASSWoRD)
+      console.log(this.BALANCE)
     },
     // mounted:{
     //       async getImageName() {

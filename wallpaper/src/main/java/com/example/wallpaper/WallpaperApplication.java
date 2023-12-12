@@ -8,9 +8,10 @@ public class WallpaperApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(WallpaperApplication.class, args);
+        System.out.println("fafsag");
     }
 
 }
-
-// 何晓凡2.0
-// 何晓凡傻逼
+//32141325
+//hhdfj
+//123456

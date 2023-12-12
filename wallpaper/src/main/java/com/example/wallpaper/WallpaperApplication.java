@@ -8,6 +8,7 @@ public class WallpaperApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(WallpaperApplication.class, args);
+        System.out.println("fafsag");
     }
 
 }

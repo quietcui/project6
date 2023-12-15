@@ -68,6 +68,9 @@ export default {
       this.postImagePrice();
     },
     methods: {
+      loadpicture(){
+
+      },
         touser() {
             let self = this;
             self.$router.push("/user");

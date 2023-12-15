@@ -20,6 +20,7 @@
             </div>
             <div class="btn-box">
                 <div>
+                    <button @click="tologin">返回登录</button>
                     <button @click="register">注册</button>
                 </div>
             </div>
@@ -40,6 +41,9 @@ export default {
         }
     },
     methods: {
+        tologin(){
+          this.$router.push("/");
+        },
         register() {
             if (this.name == "") {
                 alert("请输入账号")
@@ -207,8 +211,8 @@ export default {
     cursor: pointer;
     outline: none;
     margin-top: 10px;
-    margin-left: 60px;
-    /* display: block; */
+    //margin-left: 60px;
+    display: block;
     font-size: 14px;
     border-radius: 5px;
     transition: 0.2s;

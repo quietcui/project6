@@ -241,7 +241,7 @@
 <template>
   <div class="container">
     <div class="header">
-      <div class="logo">壁纸引擎--首页</div>
+      <div class="logo">壁纸引擎</div>
       <div class="nav">
         <button @click="refresh">首页</button>
         <button>分类</button>
@@ -258,20 +258,20 @@
     </div>
     <br>
     <div class="typechose">
-      <button :class="typechoseshow.t1" @click="tosearchtype('')">最新</button>
-      <button :class="typechoseshow.t2" @click="tosearchtype('风景')">风景</button>
-      <button :class="typechoseshow.t3" @click="tosearchtype('动物')">动物</button>
-      <button :class="typechoseshow.t4" @click="tosearchtype('美女')">美女</button>
-      <button :class="typechoseshow.t5" @click="tosearchtype('动漫')">动漫</button>
-      <button :class="typechoseshow.t6" @click="tosearchtype('游戏')">游戏</button>
-      <button :class="typechoseshow.t7" @click="tosearchtype('电影')">电影</button>
-      <button :class="typechoseshow.t8" @click="tosearchtype('明星')">明星</button>
-      <button :class="typechoseshow.t9" @click="tosearchtype('科幻')">科幻</button>
-      <button :class="typechoseshow.t10" @click="tosearchtype('其他')">其他</button>
+      <button @click="tosearchtype('')">最新</button>
+      <button @click="tosearchtype('风景')">风景</button>
+      <button @click="tosearchtype('动物')">动物</button>
+      <button @click="tosearchtype('美女')">美女</button>
+      <button @click="tosearchtype('动漫')">动漫</button>
+      <button @click="tosearchtype('游戏')">游戏</button>
+      <button @click="tosearchtype('电影')">电影</button>
+      <button @click="tosearchtype('明星')">明星</button>
+      <button @click="tosearchtype('科幻')">科幻</button>
+      <button @click="tosearchtype('其他')">其他</button>
     </div>
     <div class="imggallery">
       <div class="image-viewer">
-        <el-image class="image-style" v-for="(aimage, index) in images" :key="index" :src="getImageUrl(aimage.imageNames)" fit="contain" @click="topicture(getImageUrl(aimage.imageNames),aimage.imageID)"></el-image>
+        <el-image class="image-style" v-for="(imageName, index) in imageNames" :key="index" :src="getImageUrl(imageName)" fit="contain" @click="topicture(getImageUrl(imageName))"></el-image>
       </div>
     </div>
     <div class="footer">
@@ -304,18 +304,6 @@ export default {
       images:[],
       imageNames: [],//用于报存图片路径数组
       imageID:[],
-      typechoseshow:{
-        t1:'ty1',
-        t2:'',
-        t3:'',
-        t4:'',
-        t5:'',
-        t6:'',
-        t7:'',
-        t8:'',
-        t9:'',
-        t10:'',
-      },
     }
   },
   mounted() {
@@ -331,38 +319,6 @@ export default {
     console.log(this.BALANCE)
     this.searchtype=sessionStorage.getItem('SEARCHTYPE')
     this.postImageName();
-    this.typechoseshow={
-          t1:'',
-          t2:'',
-          t3:'',
-          t4:'',
-          t5:'',
-          t6:'',
-          t7:'',
-          t8:'',
-          t9:'',
-          t10:'',
-    };
-    if(this.searchtype=='最新')
-    {this.typechoseshow.t1='ty1'}
-    if(this.searchtype=='风景')
-    {this.typechoseshow.t2='ty1'}
-    if(this.searchtype=='动物')
-    {this.typechoseshow.t3='ty1'}
-    if(this.searchtype=='美女')
-    {this.typechoseshow.t4='ty1'}
-    if(this.searchtype=='动漫')
-    {this.typechoseshow.t5='ty1'}
-    if(this.searchtype=='游戏')
-    {this.typechoseshow.t6='ty1'}
-    if(this.searchtype=='电影')
-    {this.typechoseshow.t7='ty1'}
-    if(this.searchtype=='明星')
-    {this.typechoseshow.t8='ty1'}
-    if(this.searchtype=='科幻')
-    {this.typechoseshow.t9='ty1'}
-    if(this.searchtype=='其他')
-    {this.typechoseshow.t10='ty1'}
   },
   methods: {
     doCollapse() {
@@ -394,16 +350,10 @@ export default {
     },
     topicture(picture,picid) {
       this.picturesrc = picture;
-      this.pictureid=picid;
-      console.log(this.pictureid)
+      this.pictureid=picid
       this.$router.push({ path: '/picture', query: { name: this.picturesrc, wpid: this.pictureid} });
     },
     tosearch(){
-      if(this.searchname=='')
-      {
-        alert("请输入搜索内容");
-        location.reload();
-      }
       sessionStorage.setItem('SEARCHNAME',this.searchname)
       this.$router.push("/search");
     },
@@ -421,7 +371,7 @@ export default {
         createId:'',
         price:'',
         type:this.searchtype,
-        path:'',
+        path:''
 
       };
       try {
@@ -453,24 +403,19 @@ export default {
 </script>
 
 <style scoped>
-
-.ty1{
-  color: #ff0062;
-}
 .typechose{
   margin: 0 auto;
-  position: relative;
   font-weight: 600;
   font-size: 20px;
   display: flex;
   gap: 20px;
-  color: #333333;
 }
 .typechose button{
   text-decoration: none;
   margin: 0 auto;
   font-weight: 700;
   font-size: 20px;
+  color: #333333;
   border: none;
   background-color: rgba(255, 255, 255, 0);
 }
@@ -520,7 +465,6 @@ element {
   border-radius: 10px;
   /* 应用一个10像素的圆角，使得盒子的角变得圆滑。 */
 }
-
 .image-style :hover{
   width: 250px;
   height: 200px;

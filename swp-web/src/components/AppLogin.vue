@@ -53,6 +53,8 @@ export default {
             sessionStorage.setItem('USERID', result.data.userId)
             sessionStorage.setItem('BALANCE', result.data.balance)
             sessionStorage.setItem('PASSWORD', result.data.password)
+            sessionStorage.setItem('SEARCHNAME', '')
+            sessionStorage.setItem('SEARCHTYPE', '')
 
             self.$router.push("/index");
           } else if (result.code === 400) {

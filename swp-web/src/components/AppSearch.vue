@@ -241,9 +241,9 @@
 <template>
   <div class="container">
     <div class="header">
-      <div class="logo">壁纸引擎--首页</div>
+      <div class="logo">壁纸引擎--搜索</div>
       <div class="nav">
-        <button @click="refresh">首页</button>
+        <button @click="toindex">首页</button>
         <button>分类</button>
         <button @click="toupload">上传</button>
         <div class="userimgbox">
@@ -254,7 +254,8 @@
     </div>
     <div class="search">
       <input type="text" placeholder="搜索壁纸..." v-model="searchname">
-      <button @click="tosearch">搜索</button>
+      <button @click="searchnameway">搜索</button>
+      <div class="searchnameresole">正在显示搜索结果：{{this.searchshowname}} </div>
     </div>
     <br>
     <div class="typechose">
@@ -289,8 +290,9 @@ export default {
   name: "AppIndex",
   data() {
     return {
-      searchname:'',//搜索框内容
       searchtype:'',
+      name:'',
+      searchname:'',//搜索框内容
       NAME:'',
       BALANCE:'',
       USERID:'',
@@ -299,11 +301,10 @@ export default {
       aside_width: '200px',
       icon: 'el-icon-s-fold',
       picturesrc: '',
-      pictureid:'',
+      pictureid: '',
       imageName: "", //用于保存图片的文件名
+      searchshowname:'',//用于显示当前搜索结果
       images:[],
-      imageNames: [],//用于报存图片路径数组
-      imageID:[],
       typechoseshow:{
         t1:'ty1',
         t2:'',
@@ -324,24 +325,25 @@ export default {
     this.USERID=sessionStorage.getItem('USERID')
     this.BALANCE=sessionStorage.getItem('BALANCE')
     this.PASSWORD=sessionStorage.getItem('PASSWORD')
-    sessionStorage.setItem('SEARCHNAME', '')
     console.log(this.NAME)
     console.log(this.USERID)
     console.log(this.PASSWORD)
     console.log(this.BALANCE)
-    this.searchtype=sessionStorage.getItem('SEARCHTYPE')
+    this.searchname=sessionStorage.getItem('SEARCHNAME')
+    this.searchtype=sessionStorage.getItem("SEARCHTYPE")
+    this.searchshowname=sessionStorage.getItem('SEARCHNAME')
     this.postImageName();
     this.typechoseshow={
-          t1:'',
-          t2:'',
-          t3:'',
-          t4:'',
-          t5:'',
-          t6:'',
-          t7:'',
-          t8:'',
-          t9:'',
-          t10:'',
+      t1:'',
+      t2:'',
+      t3:'',
+      t4:'',
+      t5:'',
+      t6:'',
+      t7:'',
+      t8:'',
+      t9:'',
+      t10:'',
     };
     if(this.searchtype=='最新')
     {this.typechoseshow.t1='ty1'}
@@ -365,6 +367,10 @@ export default {
     {this.typechoseshow.t10='ty1'}
   },
   methods: {
+    searchnameway(){
+      sessionStorage.setItem('SEARCHNAME', this.searchname);
+      location.reload();
+    },
     doCollapse() {
       this.isCollapse = !this.isCollapse
       if (!this.isCollapse) {
@@ -385,11 +391,7 @@ export default {
       let self = this;
       self.$router.push("/user");
     },
-    show() {
-      console.log(this.$globalVar);
-    },
     refresh() {
-      sessionStorage.setItem('SEARCHTYPE', '')
       location.reload();
     },
     topicture(picture,picid) {
@@ -398,14 +400,9 @@ export default {
       console.log(this.pictureid)
       this.$router.push({ path: '/picture', query: { name: this.picturesrc, wpid: this.pictureid} });
     },
-    tosearch(){
-      if(this.searchname=='')
-      {
-        alert("请输入搜索内容");
-        location.reload();
-      }
-      sessionStorage.setItem('SEARCHNAME',this.searchname)
-      this.$router.push("/search");
+    toindex(){
+      sessionStorage.setItem('SEARCHTYPE', '')
+      this.$router.push("/index");
     },
     toupload() {
       this.$router.push("/upload");
@@ -417,12 +414,12 @@ export default {
       let vwallpaper = {
 
         vwpId:'' ,
-        name:'',
+        name:this.searchname,
         createId:'',
         price:'',
         type:this.searchtype,
         path:'',
-
+        imageID:[],
       };
       try {
         //使用axios发送一个GET请求，假设后端有一个接口可以返回图片的文件名
@@ -433,8 +430,6 @@ export default {
           console.log(this.imageName);
           let i=0;
           while(response.data.data[i] && response.data.data[i].path!=null){
-            this.imageNames.push(response.data.data[i].path);
-            this.imageID.push(response.data.data[i].vwpId);
             this.images.push({imageNames:response.data.data[i].path,imageID:response.data.data[i].vwpId})
             i++;
           }
@@ -453,13 +448,16 @@ export default {
 </script>
 
 <style scoped>
-
 .ty1{
   color: #ff0062;
 }
+.image-style :hover{
+  width: 250px;
+  height: 200px;
+  cursor: pointer;
+}
 .typechose{
   margin: 0 auto;
-  position: relative;
   font-weight: 600;
   font-size: 20px;
   display: flex;
@@ -478,6 +476,8 @@ export default {
   color: #0099ff;
   cursor: pointer;
 }
+
+
 element {
   object-fit: contain;
   width: 50px;
@@ -521,11 +521,6 @@ element {
   /* 应用一个10像素的圆角，使得盒子的角变得圆滑。 */
 }
 
-.image-style :hover{
-  width: 250px;
-  height: 200px;
-  cursor: pointer;
-}
 
 body {
   background-color: #f0f0f0;
@@ -602,12 +597,6 @@ body {
 .search button:hover {
   background-color: #0066cc;
   cursor: pointer;
-}
-
-.label {
-  margin: 0 auto;
-  font-weight: 600;
-  font-size: 20px;
 }
 
 .gallery {

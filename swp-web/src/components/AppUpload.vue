@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="header">
-            <div class="logo">壁纸引擎</div>
+            <div class="logo">壁纸引擎--上传</div>
             <div class="nav">
                 <button @click="toindex">首页</button>
                 <button>分类</button>
@@ -13,12 +13,14 @@
             </div>
         </div>
         <div class="form">
+          <div class="uploadbox">
           <el-upload class="avatar-uploader" action="http://localhost:8090/vwallpaper/upload" :show-file-list="false"
                      :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :on-change="handleFileChange"
-                     :data="uploadData" :auto-upload="false" ref="upload" >
+                     :data="Vwallpaper" :auto-upload="false" ref="upload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
+          </div>
             <input type="text" placeholder="输入图片名称..." v-model="tname">
             <input type="text" placeholder="输入图片价格￥(输入0即为免费分享)..." v-model="tprice">
             <div class="chosebox">请选择图片类型...</div>
@@ -48,10 +50,10 @@ export default {
     name: "AppUpload",
     data() {
         return {
-          uploadData: {
+          Vwallpaper: {
             // 额外的参数
             vwpId: '',
-            name: '',
+            name: null,
             createId: '',
             price: '',
             type: '',
@@ -63,7 +65,7 @@ export default {
             USERID:'',
             PASSWORD:'',
             imageUrl: '',
-            tname: '',
+            tname: null,
             tprice: '',
             ttype: '风景',
         };
@@ -76,8 +78,9 @@ export default {
       this.PASSWORD=sessionStorage.getItem('PASSWORD')
       console.log(this.NAME)
       console.log(this.USERID)
-      console.log(this.PASSWoRD)
+      console.log(this.PASSWORD)
       console.log(this.BALANCE)
+      sessionStorage.setItem('SEARCHTYPE', '')
     },
     methods: {
         toindex() {
@@ -93,37 +96,64 @@ export default {
             this.$router.push("/upload");
         },
         Upload() {
-          this.uploadData.name=this.tname;
-          this.uploadData.createId=this.USERID;
-          this.uploadData.price=this.tprice;
-          this.uploadData.type= this.ttype;
-          console.log(this.uploadData);
+          this.Vwallpaper.name=this.tname;
+          this.Vwallpaper.createId=this.USERID;
+          this.Vwallpaper.price=this.tprice;
+          this.Vwallpaper.type= this.ttype;
+          if(this.tname==null)
+          {
+            alert("上传失败！图片名不能为空，请输入图片名")
+            location.reload();
+            return;
+          }
+          if(this.tprice==null)
+          {
+            alert("上传失败！价格不能为空，请输入价格，免费分享请输入0");
+            location.reload();
+          }
+          console.log(this.Vwallpaper);
           this.$refs.upload.submit();
         },
         handleFileChange(file) {
           this.imageUrl = URL.createObjectURL(file.raw);
         },
-        handleAvatarSuccess(res, file) {
-          this.imageUrl = URL.createObjectURL(file.raw);
+        handleAvatarSuccess(response) {
+          // this.imageUrl = URL.createObjectURL(file.raw);
+          console.log(response);
+          console.log(response.data);
+          let result=response;
+          if(result.code === 200)
+          {
+            alert("上传成功！")
+            location.reload();
+          }
+          if(result.code === 400) {
+            alert("上传失败！价格不能为空，请输入价格，免费分享请输入0")
+            location.reload();
+          }
         },
         beforeAvatarUpload(file) {
           const isJPG = file.type === 'image/jpeg';
-          const isLt2M = file.size / 1024 / 1024 < 2;
+          const isPNG = file.type === 'image/png';
+          const isLt2M = file.size / 1024 / 1024 <10;
 
-          if (!isJPG) {
-            this.$message.error('上传头像图片只能是 JPG 格式!');
+          if (!isJPG&&!isPNG) {
+            this.$message.error('上传图片只能是 JPG 或 PNG 格式!');
           }
           if (!isLt2M) {
-            this.$message.error('上传头像图片大小不能超过 2MB!');
+            this.$message.error('上传图片大小不能超过 10MB!');
           }
-          return isJPG && isLt2M;
+          return true;
         }
     }
 }
 </script>
 
-<style>
-
+<style scoped>
+.uploadbox{
+  border: 1px solid #ccc;
+  background-color: rgba(169, 190, 188, 0.49);
+}
 .chosebox {
   width: 350px;
   height: 50px;

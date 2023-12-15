@@ -5,10 +5,12 @@ import user from '../components/AppUser.vue'
 import register from '../components/AppRegister.vue'
 import picture from '../components/AppPicture.vue'
 import upload from '../components/AppUpload.vue'
-import pictureload from '../components/PictureLoad.vue'
 import showpicture from '../components/AppShowpicture.vue'
+import pictureload from '../components/PictureLoad2.vue'
+import pictureLoad2 from "@/components/PictureLoad2.vue";
 
 const routes = [
+
   {
     path: '/',
     name: 'login',
@@ -43,6 +45,11 @@ const routes = [
     path:"/pictureload",
     name:"pictureload",
     component: pictureload
+  },
+  {
+    path: '/pictureLoad2',
+    name: 'pictureLoad2',
+    component: pictureLoad2
   },
   {
     path:"/showpicture",

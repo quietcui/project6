@@ -66,7 +66,7 @@ export default {
         this.PASSWORD=sessionStorage.getItem('PASSWORD')
         console.log(this.NAME)
         console.log(this.USERID)
-        console.log(this.PASSWoRD)
+        console.log(this.PASSWORD)
         console.log(this.BALANCE)
     },
     methods: {

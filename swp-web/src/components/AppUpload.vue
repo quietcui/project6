@@ -15,7 +15,7 @@
         <div class="form">
           <el-upload class="avatar-uploader" action="http://localhost:8090/vwallpaper/upload" :show-file-list="false"
                      :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :on-change="handleFileChange"
-                     :data="uploadData" :auto-upload="false" ref="upload" >
+                     :data="Vwallpaper" :auto-upload="false" ref="upload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -48,10 +48,10 @@ export default {
     name: "AppUpload",
     data() {
         return {
-          uploadData: {
+          Vwallpaper: {
             // 额外的参数
             vwpId: '',
-            name: '',
+            name: null,
             createId: '',
             price: '',
             type: '',
@@ -63,7 +63,7 @@ export default {
             USERID:'',
             PASSWORD:'',
             imageUrl: '',
-            tname: '',
+            tname: null,
             tprice: '',
             ttype: '风景',
         };
@@ -76,7 +76,7 @@ export default {
       this.PASSWORD=sessionStorage.getItem('PASSWORD')
       console.log(this.NAME)
       console.log(this.USERID)
-      console.log(this.PASSWoRD)
+      console.log(this.PASSWORD)
       console.log(this.BALANCE)
     },
     methods: {
@@ -93,11 +93,11 @@ export default {
             this.$router.push("/upload");
         },
         Upload() {
-          this.uploadData.name=this.tname;
-          this.uploadData.createId=this.USERID;
-          this.uploadData.price=this.tprice;
-          this.uploadData.type= this.ttype;
-          console.log(this.uploadData);
+          this.Vwallpaper.name=this.tname;
+          this.Vwallpaper.createId=this.USERID;
+          this.Vwallpaper.price=this.tprice;
+          this.Vwallpaper.type= this.ttype;
+          console.log(this.Vwallpaper);
           this.$refs.upload.submit();
         },
         handleFileChange(file) {
@@ -111,12 +111,12 @@ export default {
           const isLt2M = file.size / 1024 / 1024 < 2;
 
           if (!isJPG) {
-            this.$message.error('上传头像图片只能是 JPG 格式!');
+          //  this.$message.error('上传头像图片只能是 JPG 格式!');
           }
           if (!isLt2M) {
-            this.$message.error('上传头像图片大小不能超过 2MB!');
+           // this.$message.error('上传头像图片大小不能超过 2MB!');
           }
-          return isJPG && isLt2M;
+          return true;
         }
     }
 }

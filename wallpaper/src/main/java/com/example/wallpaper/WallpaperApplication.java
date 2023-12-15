@@ -12,6 +12,4 @@ public class WallpaperApplication {
     }
 
 }
-//32141325
-//hhdfj
-//123456
+

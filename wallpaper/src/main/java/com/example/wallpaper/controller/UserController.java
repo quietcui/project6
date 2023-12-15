@@ -64,16 +64,6 @@ public class UserController {
     }
 
     //查询
-    @PostMapping("/listP")
-    public List<User>listP(@RequestBody User user){
-
-        //实现模糊匹配和完全匹配：like是模糊搜索，eq是完全匹配
-        LambdaQueryWrapper<User> lambdaQueryWrapper=new LambdaQueryWrapper();
-        lambdaQueryWrapper.like(User::getName,user.getName());
-
-        return userService.list(lambdaQueryWrapper);
-    }
-
 
 
     @PostMapping("/login")

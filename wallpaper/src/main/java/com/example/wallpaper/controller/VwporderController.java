@@ -31,9 +31,6 @@ public class VwporderController {
     @PostMapping("/download")
     public Result save(@RequestBody Vwporder vwporder){
 
-        if(vwporder.getBuyerId()==null||vwporder.getVwpId()==null){
-            return Result.fail("信息不全");
-        }
 
 
         return null;

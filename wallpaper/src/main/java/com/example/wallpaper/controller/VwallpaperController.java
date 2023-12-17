@@ -134,7 +134,6 @@ public class VwallpaperController {
     }
 
 
-
     @GetMapping("/ShowPicture")
     public void ShowPicture(String filepath, HttpServletResponse response){
 
@@ -159,7 +158,6 @@ public class VwallpaperController {
         }
 
     }
-
 
     @PostMapping("/getImagesByTypeAndName")
     public Result getImagesByTypeAndName(@RequestBody Vwallpaper vwallpaper) {

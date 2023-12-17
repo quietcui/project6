@@ -2,6 +2,7 @@ package com.example.wallpaper.entity;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,7 +24,7 @@ public class Vwallpaper implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-//    @TableId(value = "vwp_id")
+    @TableId(value = "vwp_id",type = IdType.NONE)
     @ApiModelProperty(value = "壁纸标识")
     private String vwpId;
 

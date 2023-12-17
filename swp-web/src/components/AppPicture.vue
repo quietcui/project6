@@ -49,6 +49,7 @@ export default {
             picturename:'',
             pictureprice:'',
             picturecreatid:'',
+            picturesrc:'',
         }
     },
     mounted() {
@@ -58,17 +59,114 @@ export default {
       this.BALANCE=sessionStorage.getItem('BALANCE')
       this.PASSWORD=sessionStorage.getItem('PASSWORD')
       this.pictureid=this.$route.query.wpid;
+      this.picturesrc=this.$route.query.name;
       sessionStorage.setItem('SEARCHTYPE', '')
       console.log(this.NAME)
       console.log(this.USERID)
       console.log(this.PASSWORD)
       console.log(this.BALANCE)
       console.log(this.$route.query.name)
-      console.log(this.$route.query.vwid)
+      console.log(this.$route.query.wpid)
+      console.log(this.picturesrc)
+
       this.postImagePrice();
     },
     methods: {
+      getsrc(){
+        return this.picturesrc1;
+      },
+      // downloadImg() {
+      //   let imgname1=this.picturename;
+      //   var image = new Image();
+      //   console.log(this.picturename);
+      //   // 解决跨域 Canvas 污染问题
+      //   image.setAttribute("crossOrigin", "anonymous");
+      //   image.onload = function () {
+      //     var canvas = document.createElement("canvas");
+      //     canvas.width = image.width;
+      //     canvas.height = image.height;
+      //     var context = canvas.getContext("2d");
+      //     context.drawImage(image, 0, 0, image.width, image.height);
+      //     var url = canvas.toDataURL(); //得到图片的base64编码数据
+      //     var a = document.createElement("a"); // 生成一个a元素
+      //     var event = new MouseEvent("click"); // 创建一个单击事件
+      //     console.log(this.picturename);
+      //     a.download = imgname1 || "photo"; // 设置图片名称
+      //     a.href = url; // 将生成的URL设置为a.href属性
+      //     a.dispatchEvent(event); // 触发a的单击事件
+      //   };
+      //   image.src = this.picturesrc;
+      // },
+      downloadImg() {
+        let imgname1 = this.picturename;
+        var image = new Image();
+        console.log(this.picturename);
+        // 解决跨域 Canvas 污染问题
+        image.setAttribute("crossOrigin", "anonymous");
+
+        // 保存组件实例
+        var vm = this;
+
+        image.onload = function () {
+          var canvas = document.createElement("canvas");
+          canvas.width = image.width;
+          canvas.height = image.height;
+          var context = canvas.getContext("2d");
+          context.drawImage(image, 0, 0, image.width, image.height);
+
+          // 获取原始二进制数据
+          canvas.toBlob(function (blob) {
+            var url = window.URL.createObjectURL(blob); // 创建一个 Blob URL
+            var a = document.createElement("a"); // 生成一个 <a> 元素
+            var event = new MouseEvent("click"); // 创建一个单击事件
+            console.log(vm.picturename); // 使用保存的组件实例
+
+            a.download = imgname1 || "photo"; // 设置图片名称
+            a.href = url; // 将生成的 Blob URL 设置为 a.href 属性
+            a.dispatchEvent(event); // 触发 <a> 的单击事件
+
+            // 释放 Blob URL
+            window.URL.revokeObjectURL(url);
+          });
+        };
+        image.src = this.picturesrc;
+      },
       loadpicture(){
+        let user = {
+          vwpId: this.pictureid,
+          orderId:'',
+          buyerId:this.USERID,
+        };
+        if(this.BALANCE<this.pictureprice)
+        {
+          alert("抱歉，您无法购买此壁纸，因为您的余额不足");
+          location.reload();
+        }
+        if(this.USERID==this.picturecreatid)
+        {
+          alert("抱歉，您无法购买此壁纸，因为您是壁纸的上传者");
+          location.reload();
+        }
+        let self = this;
+        this.$axios.post('http://localhost:8090/vwporder/download', user)     ////////////////////////////////////登录信息
+            .then(function (response) {
+              let result = response.data;
+              if (result.code === 200) {
+                console.log("登录成功！");
+                console.log("返回的数据：", result.data);
+                console.log("总记录数：", result.total);
+                alert("购买成功！");
+                self.downloadImg();
+
+              } else if (result.code === 400) {
+                console.log("失败！");
+                alert("您无法购买此壁纸，因为你是此壁纸的上传者，或者您的余额不足");
+                location.reload();
+              }
+            })
+            .catch(function (error) {
+              console.log("请求错误：", error);
+            });
 
       },
         touser() {

@@ -104,6 +104,14 @@ public class UserController {
         }
     }
 
+    @PostMapping("/TopUp")
+    public Result TopUp(@RequestBody User user){
+        if(user.getBalance()<=userService.getById(user.getUserId()).getBalance()){
+            return Result.fail("充值金额错误");
+        }
 
+        userService.updateById(user);
+        return Result.suc(user);
+    }
 
 }

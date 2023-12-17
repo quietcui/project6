@@ -42,7 +42,6 @@ public class VwpdownloadController {
     @Autowired
     private VwallpaperService vwallpaperService;
 
-
     @PostMapping("/download")
     public Result download(@RequestBody Vwpdownload vwpdownload) {
 
@@ -52,7 +51,7 @@ public class VwpdownloadController {
                 vwpdownload.getVwpId().equals("null")    ) {
             return Result.fail("信息不全");
         }
-        System.out.println("");
+
         if(vwallpaperService.getById(vwpdownload.getVwpId()).getPrice()!=0){
 
             LambdaQueryWrapper<Vwporder> lambdaQueryWrapper=new LambdaQueryWrapper();

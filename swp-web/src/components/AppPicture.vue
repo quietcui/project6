@@ -7,19 +7,22 @@
                 <button>分类</button>
                 <button @click="toupload">上传</button>
                 <div class="userimgbox">
-                    <img src="../assets/tou1.jpg" alt="" width="25" @click="touser">
+                    <img src="../assets/bg.jpg" alt="" width="25" @click="touser">
                     <div>{{ this.NAME }}</div>
                 </div>
             </div>
         </div>
         <div class="nav">
-            <button @click="toindex"> 《--返回上一页</button>
+            <button @click="tolastpage"> 《--返回上一页</button>
         </div>
         <div class="info">
             <div>壁纸名称: {{this.picturename}}</div>
             <div>壁纸价格: {{this.pictureprice}}￥</div>
             <div>壁纸创作者: {{this.picturecreatid}}</div>
+            <button @click="buypicture">购买</button>
             <button @click="loadpicture">下载</button>
+            <button @click="likepicture">点赞</button>
+            <button @click="collectpicture">收藏</button>
         </div>
         <div class="image">
             <img v-if="this.$route.query.name" :src="this.$route.query.name">
@@ -50,6 +53,7 @@ export default {
             pictureprice:'',
             picturecreatid:'',
             picturesrc:'',
+            lastpage:'',
         }
     },
     mounted() {
@@ -58,9 +62,11 @@ export default {
       this.USERID=sessionStorage.getItem('USERID')
       this.BALANCE=sessionStorage.getItem('BALANCE')
       this.PASSWORD=sessionStorage.getItem('PASSWORD')
+      sessionStorage.setItem('USERCHOSE', 'myup')
       this.pictureid=this.$route.query.wpid;
       this.picturesrc=this.$route.query.name;
       sessionStorage.setItem('SEARCHTYPE', '')
+      this.lastpage=sessionStorage.getItem('LASTURL')
       console.log(this.NAME)
       console.log(this.USERID)
       console.log(this.PASSWORD)
@@ -75,28 +81,99 @@ export default {
       getsrc(){
         return this.picturesrc1;
       },
-      // downloadImg() {
-      //   let imgname1=this.picturename;
-      //   var image = new Image();
-      //   console.log(this.picturename);
-      //   // 解决跨域 Canvas 污染问题
-      //   image.setAttribute("crossOrigin", "anonymous");
-      //   image.onload = function () {
-      //     var canvas = document.createElement("canvas");
-      //     canvas.width = image.width;
-      //     canvas.height = image.height;
-      //     var context = canvas.getContext("2d");
-      //     context.drawImage(image, 0, 0, image.width, image.height);
-      //     var url = canvas.toDataURL(); //得到图片的base64编码数据
-      //     var a = document.createElement("a"); // 生成一个a元素
-      //     var event = new MouseEvent("click"); // 创建一个单击事件
-      //     console.log(this.picturename);
-      //     a.download = imgname1 || "photo"; // 设置图片名称
-      //     a.href = url; // 将生成的URL设置为a.href属性
-      //     a.dispatchEvent(event); // 触发a的单击事件
-      //   };
-      //   image.src = this.picturesrc;
-      // },
+      collectpicture(){
+        let self = this;
+        if(this.picturecreatid==this.USERID)
+        {self.downloadImg()}
+        else
+        {
+          let user = {
+            vwpId: this.pictureid,
+            userId: this.USERID,
+          };
+          this.$axios.post('http://localhost:8090/vwpdownload/download', user)     ////////////////////////////////////登录信息
+              .then(function (response) {
+                let result = response.data;
+                if (result.code === 200) {
+                  console.log("登录成功！");
+                  console.log("返回的数据：", result.data);
+                  console.log("总记录数：", result.total);
+                  self.downloadImg();
+
+                } else if (result.code === 400) {
+                  if (result.msg == "你还没购买过该壁纸") {
+                    alert("您还没购买过该壁纸，无法下载");
+                    location.reload();
+                  }
+                }
+              })
+              .catch(function (error) {
+                console.log("请求错误：", error);
+              });
+        }
+      },
+      likepicture(){
+        let self = this;
+        if(this.picturecreatid==this.USERID)
+        {self.downloadImg()}
+        else
+        {
+          let user = {
+            vwpId: this.pictureid,
+            userId: this.USERID,
+          };
+          this.$axios.post('http://localhost:8090/vwpdownload/download', user)     ////////////////////////////////////登录信息
+              .then(function (response) {
+                let result = response.data;
+                if (result.code === 200) {
+                  console.log("登录成功！");
+                  console.log("返回的数据：", result.data);
+                  console.log("总记录数：", result.total);
+                  self.downloadImg();
+
+                } else if (result.code === 400) {
+                  if (result.msg == "你还没购买过该壁纸") {
+                    alert("您还没购买过该壁纸，无法下载");
+                    location.reload();
+                  }
+                }
+              })
+              .catch(function (error) {
+                console.log("请求错误：", error);
+              });
+        }
+      },
+      loadpicture(){
+        let self = this;
+        if(this.picturecreatid==this.USERID)
+        {self.downloadImg()}
+        else
+        {
+          let user = {
+            vwpId: this.pictureid,
+            userId: this.USERID,
+          };
+          this.$axios.post('http://localhost:8090/vwpdownload/download', user)     ////////////////////////////////////登录信息
+              .then(function (response) {
+                let result = response.data;
+                if (result.code === 200) {
+                  console.log("登录成功！");
+                  console.log("返回的数据：", result.data);
+                  console.log("总记录数：", result.total);
+                  self.downloadImg();
+
+                } else if (result.code === 400) {
+                  if (result.msg == "你还没购买过该壁纸") {
+                    alert("您还没购买过该壁纸，无法下载");
+                    location.reload();
+                  }
+                }
+              })
+              .catch(function (error) {
+                console.log("请求错误：", error);
+              });
+        }
+      },
       downloadImg() {
         let imgname1 = this.picturename;
         var image = new Image();
@@ -131,7 +208,7 @@ export default {
         };
         image.src = this.picturesrc;
       },
-      loadpicture(){
+      buypicture(){
         let user = {
           vwpId: this.pictureid,
           orderId:'',
@@ -148,20 +225,36 @@ export default {
           location.reload();
         }
         let self = this;
-        this.$axios.post('http://localhost:8090/vwporder/download', user)     ////////////////////////////////////登录信息
+        this.$axios.post('http://localhost:8090/vwporder/purchaseImage', user)     ////////////////////////////////////登录信息
             .then(function (response) {
               let result = response.data;
               if (result.code === 200) {
                 console.log("登录成功！");
                 console.log("返回的数据：", result.data);
                 console.log("总记录数：", result.total);
+                sessionStorage.setItem('BALANCE', result.data.balance)
                 alert("购买成功！");
-                self.downloadImg();
+                location.reload();
 
               } else if (result.code === 400) {
                 console.log("失败！");
-                alert("您无法购买此壁纸，因为你是此壁纸的上传者，或者您的余额不足");
-                location.reload();
+                console.log(result);
+                if(result.msg == "不需要购买!") {
+                  alert("该壁纸由创作者免费提供，您无需购买，可直接下载");
+                  location.reload();
+                }
+                if(result.msg == "不能购买自己上传的壁纸") {
+                  alert("您无法购买此壁纸，因为你是此壁纸的上传者");
+                  location.reload();
+                }
+                if(result.msg == "余额不足") {
+                  alert("您无法购买此壁纸，因为您的余额不足");
+                  location.reload();
+                }
+                if(result.msg == "你已购买过该壁纸") {
+                  alert("您无法购买此壁纸，因为您已经购买过该壁纸，可直接下载");
+                  location.reload();
+                }
               }
             })
             .catch(function (error) {
@@ -169,6 +262,11 @@ export default {
             });
 
       },
+        tolastpage(){
+          let self = this;
+          console.log(this.lastpage);
+          self.$router.push(this.lastpage);
+        },
         touser() {
             let self = this;
             self.$router.push("/user");
@@ -234,7 +332,7 @@ body {
 .logo {
     font-size: 32px;
     font-weight: bold;
-    color: #333333;
+    color: black;
 }
 
 .nav {
@@ -248,8 +346,9 @@ body {
 
 .nav button {
   text-decoration: none;
-  color: #333333;
-  font-size: 16px;
+  color: black;
+  font-size: 20px;
+  font-weight: 600;
   border: none;
   background-color: rgba(255, 255, 255, 0);
 }
@@ -353,6 +452,12 @@ body {
 
 .userimgbox {
     margin-top: 20px;
+}
+.userimgbox img{
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 </style>
     

@@ -73,6 +73,7 @@ export default {
     this.USERID=sessionStorage.getItem('USERID')
     this.BALANCE=sessionStorage.getItem('BALANCE')
     this.PASSWORD=sessionStorage.getItem('PASSWORD')
+    sessionStorage.setItem('USERCHOSE', 'myup')
     sessionStorage.setItem('SEARCHTYPE', '')
     console.log(this.NAME)
     console.log(this.USERID)
@@ -85,16 +86,28 @@ export default {
       location.reload();
     },
     payup() {
+      if(this.payprice=='')
+      {
+        alert("请输入充值金额！");
+        location.reload();
+      }
+      else if(this.payprice<=0)
+      {
+        alert("充值失败，您必须输入大于0的充值金额");
+        location.reload();
+      }
+      let bal=0;
+          bal=parseFloat(this.BALANCE)+parseFloat(this.payprice);
       let user = {
-        userId: this.NAME,
-        payprice: this.payprice,
-        payway:this.a,
+        userId: this.USERID,
+        name: '',
+        password: '',
+        balance: bal,
       };
       console.log(this.NAME);
       console.log(user.payprice);
-      console.log(this.a);
       let self = this;
-      this.$axios.post('http://localhost:8090/pay', user)     ////////////////////////////////////充值
+      this.$axios.post('http://localhost:8090/user/TopUp', user)     ////////////////////////////////////充值
           .then(function (response) {
             let result = response.data;
             if (result.code === 200) {
@@ -102,15 +115,13 @@ export default {
               console.log("返回的数据：", result.data);
               console.log("总记录数：", result.total);
 
-              sessionStorage.setItem('NAME', result.data.name)
-              sessionStorage.setItem('USERID', result.data.userId)
               sessionStorage.setItem('BALANCE', result.data.balance)
-              sessionStorage.setItem('PASSWORD', result.data.password)
 
-              self.$router.push("/index");
+              alert("充值成功！");
+              location.reload();
             } else if (result.code === 400) {
               console.log("登录失败！");
-              alert("账号或密码错误，请重新输入");
+              alert("充值失败");
               location.reload();
             }
           })

@@ -55,6 +55,8 @@ export default {
             sessionStorage.setItem('PASSWORD', result.data.password)
             sessionStorage.setItem('SEARCHNAME', '')
             sessionStorage.setItem('SEARCHTYPE', '')
+            sessionStorage.setItem('USERCHOSE', 'myup')
+            sessionStorage.setItem('LASTURL', '')
 
             self.$router.push("/index");
           } else if (result.code === 400) {

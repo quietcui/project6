@@ -247,7 +247,7 @@
         <button>分类</button>
         <button @click="toupload">上传</button>
         <div class="userimgbox">
-          <img src="../assets/tou1.jpg" alt="" width="25" @click="touser">
+          <img src="../assets/bg.jpg" alt="" width="25" @click="touser">
           <div>{{ this.NAME }}</div>
         </div>
       </div>
@@ -325,6 +325,8 @@ export default {
     this.USERID=sessionStorage.getItem('USERID')
     this.BALANCE=sessionStorage.getItem('BALANCE')
     this.PASSWORD=sessionStorage.getItem('PASSWORD')
+    sessionStorage.setItem('USERCHOSE', 'myup')
+    sessionStorage.setItem('LASTURL', '/search')
     console.log(this.NAME)
     console.log(this.USERID)
     console.log(this.PASSWORD)
@@ -543,7 +545,7 @@ body {
 .logo {
   font-size: 32px;
   font-weight: bold;
-  color: #333333;
+  color: black;
 }
 
 .nav {
@@ -557,8 +559,9 @@ body {
 
 .nav button {
   text-decoration: none;
-  color: #333333;
-  font-size: 16px;
+  color: black;
+  font-size: 20px;
+  font-weight: 600;
   border: none;
   background-color: rgba(255, 255, 255, 0);
 }
@@ -630,5 +633,11 @@ body {
 
 .userimgbox {
   margin-top: 20px;
+}
+.userimgbox img{
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 </style>

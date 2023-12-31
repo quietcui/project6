@@ -110,8 +110,11 @@ public class UserController {
             return Result.fail("充值金额错误");
         }
 
-        userService.updateById(user);
-        return Result.suc(user);
+        User TempUser=userService.getById(user);
+        TempUser.setBalance(user.getBalance());
+
+        userService.updateById(TempUser);
+        return Result.suc(TempUser);
     }
 
 }

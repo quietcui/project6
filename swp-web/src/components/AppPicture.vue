@@ -87,11 +87,11 @@ export default {
         {self.downloadImg()}
         else
         {
-          let user = {
+          let mycollect = {
             vwpId: this.pictureid,
             userId: this.USERID,
           };
-          this.$axios.post('http://localhost:8090/vwpdownload/download', user)     ////////////////////////////////////登录信息
+          this.$axios.post('http://localhost:8090/mycollect/collect', mycollect)     ////////////////////////////////////登录信息
               .then(function (response) {
                 let result = response.data;
                 if (result.code === 200) {

@@ -4,10 +4,7 @@ package com.example.wallpaper.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.wallpaper.common.Result;
-import com.example.wallpaper.entity.User;
-import com.example.wallpaper.entity.Vwallpaper;
-import com.example.wallpaper.entity.Vwpdownload;
-import com.example.wallpaper.entity.Vwporder;
+import com.example.wallpaper.entity.*;
 import com.example.wallpaper.service.VwallpaperService;
 import com.example.wallpaper.service.VwpdownloadService;
 import com.example.wallpaper.service.VwporderService;
@@ -103,4 +100,6 @@ public class VwpdownloadController {
 
         return Result.suc(vwallpapers);
     }
+
+
 }

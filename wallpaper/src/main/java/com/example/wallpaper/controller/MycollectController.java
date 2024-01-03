@@ -39,7 +39,7 @@ public class MycollectController {
 
 
     @PostMapping("/doCollect")
-    public Result download(@RequestBody Mycollect mycollect) {
+    public Result doCollect(@RequestBody Mycollect mycollect) {
 
         if (mycollect.getUserId() == null ||
                 mycollect.getVwpId() == null ||
@@ -51,21 +51,50 @@ public class MycollectController {
         }
 
 
-
         LambdaQueryWrapper<Mycollect> lambdaQueryWrapper=new LambdaQueryWrapper();
         lambdaQueryWrapper  .eq(Mycollect::getUserId,mycollect.getUserId())
-                            .eq(Mycollect::getVwpId,mycollect.getVwpId());
+                .eq(Mycollect::getVwpId,mycollect.getVwpId());
         List<Mycollect> mycollects=mycollectService.list(lambdaQueryWrapper);
 
 
         if(mycollects.size()==0){
             mycollectService.save(mycollect);
+            return Result.suc("成功收藏");
         }else{
-            return Result.fail("你已经收藏过该壁纸");
+            mycollectService.remove(lambdaQueryWrapper);
+            return Result.suc("取消收藏");
         }
 
-        return Result.suc(mycollect);
+
     }
+
+
+    @PostMapping("/queryCollect")
+    public Result queryCollect(@RequestBody Mycollect mycollect) {
+
+        if (mycollect.getUserId() == null ||
+                mycollect.getVwpId() == null ||
+                mycollect.getUserId().equals("null") ||
+                mycollect.getVwpId().equals("null")  ||
+                mycollect.getUserId().equals("") ||
+                mycollect.getVwpId().equals("") ) {
+            return Result.fail("信息不全");
+        }
+
+
+        LambdaQueryWrapper<Mycollect> lambdaQueryWrapper=new LambdaQueryWrapper();
+        lambdaQueryWrapper  .eq(Mycollect::getUserId,mycollect.getUserId())
+                .eq(Mycollect::getVwpId,mycollect.getVwpId());
+        List<Mycollect> mycollects=mycollectService.list(lambdaQueryWrapper);
+
+
+        if(mycollects.size()==0){
+            return Result.suc("尚未收藏");
+        }else{
+            return Result.suc("已经收藏");
+        }
+    }
+
 
     @PostMapping("/collect")
     public Result Collect(@RequestBody Mycollect mycollect) {

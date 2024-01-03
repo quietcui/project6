@@ -39,7 +39,7 @@ public class MyfavouriteController {
 
 
     @PostMapping("/doFavourite")
-    public Result download(@RequestBody Myfavourite myfavourite) {
+    public Result doFavourite(@RequestBody Myfavourite myfavourite) {
 
         if (myfavourite.getUserId() == null ||
                 myfavourite.getVwpId() == null ||
@@ -50,8 +50,6 @@ public class MyfavouriteController {
             return Result.fail("信息不全");
         }
 
-
-
         LambdaQueryWrapper<Myfavourite> lambdaQueryWrapper=new LambdaQueryWrapper();
         lambdaQueryWrapper  .eq(Myfavourite::getUserId,myfavourite.getUserId())
                 .eq(Myfavourite::getVwpId,myfavourite.getVwpId());
@@ -60,12 +58,39 @@ public class MyfavouriteController {
 
         if(myfavourites.size()==0){
             myfavouriteService.save(myfavourite);
+            return Result.suc("点赞成功");
         }else{
-            return Result.fail("你已经点赞过该壁纸");
+            myfavouriteService.remove(lambdaQueryWrapper);
+            return Result.suc("取消点赞");
+        }
+    }
+
+
+    @PostMapping("/queryFavourite")
+    public Result queryFavourite(@RequestBody Myfavourite myfavourite) {
+
+        if (myfavourite.getUserId() == null ||
+                myfavourite.getVwpId() == null ||
+                myfavourite.getUserId().equals("null") ||
+                myfavourite.getVwpId().equals("null") ||
+                myfavourite.getUserId().equals("") ||
+                myfavourite.getVwpId().equals("")   ) {
+            return Result.fail("信息不全");
         }
 
-        return Result.suc(myfavourite);
+        LambdaQueryWrapper<Myfavourite> lambdaQueryWrapper=new LambdaQueryWrapper();
+        lambdaQueryWrapper  .eq(Myfavourite::getUserId,myfavourite.getUserId())
+                .eq(Myfavourite::getVwpId,myfavourite.getVwpId());
+        List<Myfavourite> myfavourites=myfavouriteService.list(lambdaQueryWrapper);
+
+
+        if(myfavourites.size()==0){
+            return Result.suc("尚未点赞");
+        }else{
+            return Result.suc("已经点赞");
+        }
     }
+
 
     @PostMapping("/favourite")
     public Result Collect(@RequestBody Myfavourite myfavourite) {

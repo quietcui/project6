@@ -1,254 +1,14 @@
-<!--<template>-->
-<!--    <div class="container">-->
-<!--        <div class="header">-->
-<!--            <div class="logo">壁纸引擎</div>-->
-<!--            <div class="nav">-->
-<!--                <button @click="refresh">首页</button>-->
-<!--                <button>分类</button>-->
-<!--                <button @click="toupload">上传</button>-->
-<!--                <div class="userimgbox">-->
-<!--                    <img src="../assets/tou1.jpg" alt="" width="25" @click="touser">-->
-<!--                    <div>{{ this.NAME }}</div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="search">-->
-<!--            <input type="text" placeholder="搜索壁纸...">-->
-<!--            <button>搜索</button>-->
-<!--        </div>-->
-<!--        <br>-->
-<!--        <div class="label">-->
-<!--            最新 风景 动物 美女 动漫 游戏 电影 明星 科幻 其他-->
-<!--        </div>-->
-<!--        <div class="gallery">-->
-<!--            <img src="https://picsum.photos/300/200?random=1" @click="topicture('https://picsum.photos/300/200?random=1')">-->
-<!--            <img src="https://picsum.photos/300/200?random=2">-->
-<!--            <img src="https://picsum.photos/300/200?random=3">-->
-<!--            <img src="https://picsum.photos/300/200?random=4">-->
-<!--            <img src="https://picsum.photos/300/200?random=5">-->
-<!--            <img src="https://picsum.photos/300/200?random=6">-->
-<!--            <img src="https://picsum.photos/300/200?random=7">-->
-<!--            <img src="https://picsum.photos/300/200?random=8">-->
-<!--            <img src="https://picsum.photos/300/200?random=9">-->
-<!--            <img src="https://picsum.photos/300/200?random=10">-->
-<!--            <img src="https://picsum.photos/300/200?random=11">-->
-<!--            <img src="https://picsum.photos/300/200?random=12">-->
-<!--            <img src="https://picsum.photos/300/200?random=13">-->
-<!--            <img src="https://picsum.photos/300/200?random=14">-->
-<!--            <img src="https://picsum.photos/300/200?random=15">-->
-<!--            <img src="https://picsum.photos/300/200?random=16">-->
-<!--        </div>-->
-<!--        <div class="footer">-->
-<!--            <p>© 2023 壁纸引擎. All rights reserved.</p>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--import axios from "axios";-->
-
-<!--export default {-->
-
-<!--    name: "AppIndex",-->
-<!--    data() {-->
-<!--        return {-->
-<!--            NAME:'',-->
-<!--            BALANCE:'',-->
-<!--            USERID:'',-->
-<!--            PASSWORD:'',-->
-<!--            isCollapse: false,-->
-<!--            aside_width: '200px',-->
-<!--            icon: 'el-icon-s-fold',-->
-<!--            picturesrc: '',-->
-<!--            imageName: "", //用于保存图片的文件名-->
-<!--        }-->
-<!--    },-->
-<!--    mounted() {-->
-<!--      // 在组件加载时自动执行的函数-->
-<!--      this.NAME=sessionStorage.getItem('NAME')-->
-<!--      this.USERID=sessionStorage.getItem('USERID')-->
-<!--      this.BALANCE=sessionStorage.getItem('BALANCE')-->
-<!--      this.PASSWORD=sessionStorage.getItem('PASSWORD')-->
-<!--      console.log(this.NAME)-->
-<!--      console.log(this.USERID)-->
-<!--      console.log(this.PASSWoRD)-->
-<!--      console.log(this.BALANCE)-->
-<!--    },-->
-<!--    methods: {-->
-<!--        doCollapse() {-->
-<!--            this.isCollapse = !this.isCollapse-->
-<!--            if (!this.isCollapse) {-->
-<!--                //展开-->
-<!--                this.aside_width = '200px',-->
-<!--                    this.icon = 'el-icon-s-fold'-->
-<!--            } else {-->
-<!--                //收起-->
-<!--                this.aside_width = '65px',-->
-<!--                    this.icon = 'el-icon-s-unfold'-->
-<!--            }-->
-<!--        },-->
-<!--        touser() {-->
-<!--            let self = this;-->
-<!--            self.$router.push("/user");-->
-<!--        },-->
-<!--        show() {-->
-<!--            console.log(this.$globalVar);-->
-<!--        },-->
-<!--        refresh() {-->
-<!--            location.reload();-->
-<!--        },-->
-<!--        topicture(picture) {-->
-<!--            console.log(picture);-->
-<!--            this.picturesrc = picture;-->
-<!--            this.$router.push({ path: '/picture', query: { name: this.picturesrc } });-->
-<!--        },-->
-<!--        toupload() {-->
-<!--            this.$router.push("/upload");-->
-<!--        }-->
-<!--    },-->
-
-<!--    computed: {-->
-<!--    }-->
-<!--}-->
-<!--</script>-->
-
-<!--<style scoped>-->
-<!--body {-->
-<!--    background-color: #f0f0f0;-->
-<!--    font-family: Arial, sans-serif;-->
-<!--}-->
-
-<!--.image-viewer {-->
-<!--    width: 600px;-->
-<!--    height: 400px;-->
-<!--    margin: 20px auto;-->
-<!--    border: 1px solid #ccc;-->
-<!--}-->
-
-<!--.container {-->
-<!--    width: 80%;-->
-<!--    margin: 0 auto;-->
-<!--}-->
-
-<!--.header {-->
-<!--    display: flex;-->
-<!--    align-items: center;-->
-<!--    justify-content: space-between;-->
-<!--    padding: 20px;-->
-<!--}-->
-
-<!--.logo {-->
-<!--    font-size: 32px;-->
-<!--    font-weight: bold;-->
-<!--    color: #333333;-->
-<!--}-->
-
-<!--.nav {-->
-<!--    display: flex;-->
-<!--    gap: 20px;-->
-<!--}-->
-
-<!--.nav img:hover {-->
-<!--    cursor: pointer;-->
-<!--}-->
-
-<!--.nav button {-->
-<!--    text-decoration: none;-->
-<!--    color: #333333;-->
-<!--    font-size: 16px;-->
-<!--    border: none;-->
-<!--    background-color: rgba(255, 255, 255, 0);-->
-<!--}-->
-
-<!--.nav button:hover {-->
-<!--    color: #0099ff;-->
-<!--    cursor: pointer;-->
-<!--}-->
-
-<!--.search {-->
-<!--    display: flex;-->
-<!--    align-items: center;-->
-<!--    gap: 10px;-->
-<!--    margin-top: 20px;-->
-<!--}-->
-
-<!--.search input {-->
-<!--    width: 60%;-->
-<!--    height: 40px;-->
-<!--    border: 1px solid #cccccc;-->
-<!--    border-radius: 20px;-->
-<!--    padding: 10px;-->
-<!--    font-size: 16px;-->
-<!--}-->
-
-<!--.search button {-->
-<!--    width: 100px;-->
-<!--    height: 40px;-->
-<!--    border: none;-->
-<!--    border-radius: 20px;-->
-<!--    background-color: #0099ff;-->
-<!--    color: white;-->
-<!--    font-size: 16px;-->
-<!--}-->
-
-<!--.search button:hover {-->
-<!--    background-color: #0066cc;-->
-<!--}-->
-
-<!--.label {-->
-<!--    margin: 0 auto;-->
-<!--    font-weight: 600;-->
-<!--    font-size: 20px;-->
-<!--}-->
-
-<!--.gallery {-->
-<!--    display: grid;-->
-<!--    grid-template-columns: repeat(4, 1fr);-->
-<!--    grid-gap: 20px;-->
-<!--    margin-top: 20px;-->
-<!--}-->
-
-<!--.gallery img {-->
-<!--    width: 100%;-->
-<!--    height: 200px;-->
-<!--    object-fit: cover;-->
-<!--}-->
-
-<!--.gallery img:hover {-->
-<!--    opacity: 0.8;-->
-<!--}-->
-
-<!--.footer {-->
-<!--    display: flex;-->
-<!--    align-items: center;-->
-<!--    justify-content: center;-->
-<!--    padding: 20px;-->
-<!--}-->
-
-<!--.footer p {-->
-<!--    font-size: 14px;-->
-<!--    color: #999999;-->
-<!--}-->
-
-<!--.userimgbox {-->
-<!--    margin-top: 20px;-->
-<!--}-->
-<!--</style>-->
-
-
-
-
 <template>
   <div class="container">
     <div class="header">
       <div class="logo">壁纸引擎--搜索</div>
       <div class="nav">
         <button @click="toindex">首页</button>
-        <button>分类</button>
+        <button @clikc="refresh">刷新</button>
         <button @click="toupload">上传</button>
         <div class="userimgbox">
           <img src="../assets/bg.jpg" alt="" width="25" @click="touser">
-          <div>{{ this.NAME }}</div>
+          <div style=" color: #28e1f8;">{{ this.NAME }}</div>
         </div>
       </div>
     </div>
@@ -545,7 +305,7 @@ body {
 .logo {
   font-size: 32px;
   font-weight: bold;
-  color: black;
+  color: #28e1f8;
 }
 
 .nav {
@@ -559,7 +319,7 @@ body {
 
 .nav button {
   text-decoration: none;
-  color: black;
+  color: #28e1f8;
   font-size: 20px;
   font-weight: 600;
   border: none;
@@ -567,7 +327,7 @@ body {
 }
 
 .nav button:hover {
-  color: #0099ff;
+  color: #ff0062;
   cursor: pointer;
 }
 

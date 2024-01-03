@@ -4,11 +4,11 @@
             <div class="logo">壁纸引擎--壁纸</div>
             <div class="nav">
                 <button @click="toindex">首页</button>
-                <button>分类</button>
+                <button @click="refresh">刷新</button>
                 <button @click="toupload">上传</button>
                 <div class="userimgbox">
                     <img src="../assets/bg.jpg" alt="" width="25" @click="touser">
-                    <div>{{ this.NAME }}</div>
+                    <div style=" color: #28e1f8;">{{ this.NAME }}</div>
                 </div>
             </div>
         </div>
@@ -19,10 +19,46 @@
             <div>壁纸名称: {{this.picturename}}</div>
             <div>壁纸价格: {{this.pictureprice}}￥</div>
             <div>壁纸创作者: {{this.picturecreatid}}</div>
-            <button @click="buypicture">购买</button>
-            <button @click="loadpicture">下载</button>
-            <button @click="likepicture">点赞</button>
-            <button @click="collectpicture">收藏</button>
+          <img
+              v-bind:src="isbuyHover ? require('@/assets/buyhover.png') : require('@/assets/buy.png')"
+              v-on:mouseover="togglebuyHover(true)"
+              v-on:mouseout="togglebuyHover(false)"
+              width="30" @click="buypicture" title="购买"
+          />
+          <img
+              v-bind:src="isloadHover ? require('@/assets/downloadhover.png') : require('@/assets/download.png')"
+              v-on:mouseover="toggleloadHover(true)"
+              v-on:mouseout="toggleloadHover(false)"
+              width="30" @click="loadpicture" title="下载"
+          />
+          <img
+              v-bind:src="islikeHover ? require('@/assets/likehover.png') : require('@/assets/like.png')"
+              v-if="!likeflag"
+              v-on:mouseover="togglelikeHover(true)"
+              v-on:mouseout="togglelikeHover(false)"
+              width="30" @click="likepicture" title="点赞"
+          />
+          <img
+              v-bind:src="islikeHover ? require('@/assets/likehover.png') : require('@/assets/like1.png')"
+              v-if="likeflag"
+              v-on:mouseover="togglelikeHover(true)"
+              v-on:mouseout="togglelikeHover(false)"
+              width="30" @click="likepicture" title="点赞"
+          />
+          <img
+              v-bind:src="iscollectHover ? require('@/assets/collecthover.png') : require('@/assets/collect.png')"
+              v-if="!collectflag"
+              v-on:mouseover="togglecollectHover(true)"
+              v-on:mouseout="togglecollectHover(false)"
+              width="30" @click="collectpicture" title="收藏"
+          />
+          <img
+              v-bind:src="iscollectHover ? require('@/assets/collecthover.png') : require('@/assets/collect2.png')"
+              v-if="collectflag"
+              v-on:mouseover="togglecollectHover(true)"
+              v-on:mouseout="togglecollectHover(false)"
+              width="30" @click="collectpicture" title="收藏"
+          />
         </div>
         <div class="image">
             <img v-if="this.$route.query.name" :src="this.$route.query.name">
@@ -54,6 +90,12 @@ export default {
             picturecreatid:'',
             picturesrc:'',
             lastpage:'',
+            isbuyHover: false,
+            iscollectHover: false,
+            isloadHover: false,
+            islikeHover: false,
+            likeflag: false,
+            collectflag:false,
         }
     },
     mounted() {
@@ -76,72 +118,154 @@ export default {
       console.log(this.picturesrc)
 
       this.postImagePrice();
+      this.flaglikepicture();
+      this.flagcollectpicture();
+
     },
     methods: {
+      togglebuyHover(value) {
+        this.isbuyHover = value;
+      },
+      togglecollectHover(value) {
+        this.iscollectHover = value;
+      },
+      toggleloadHover(value) {
+        this.isloadHover = value;
+      },
+      togglelikeHover(value) {
+        this.islikeHover = value;
+      },
       getsrc(){
         return this.picturesrc1;
       },
+      flagcollectpicture(){
+        let self = this;
+        let mycollect = {
+          vwpId: this.pictureid,
+          userId: this.USERID,
+        };
+        this.$axios.post('http://localhost:8090/mycollect/queryCollect', mycollect)     ////////////////////////////////////登录信息
+            .then(function (response) {
+              let result = response.data;
+              if (result.code === 200) {
+                console.log("登录成功！");
+                console.log("返回的数据：", result.data);
+                console.log("总记录数：", result.total);
+                if(result.data=="已经收藏")
+                {
+                  self.collectflag=true;
+                }
+                else if(result.data=="尚未收藏")
+                {
+                  self.collectflag=false;
+                }
+
+              } else if (result.code === 400) {
+                alert("error");
+                location.reload();
+              }
+            })
+            .catch(function (error) {
+              console.log("请求错误：", error);
+            });
+      },
+      flaglikepicture(){
+        let self = this;
+        let mycollect = {
+          vwpId: this.pictureid,
+          userId: this.USERID,
+        };
+        this.$axios.post('http://localhost:8090/myfavourite/queryFavourite', mycollect)     ////////////////////////////////////登录信息
+            .then(function (response) {
+              let result = response.data;
+              if (result.code === 200) {
+                console.log("登录成功！");
+                console.log("返回的数据：", result.data);
+                console.log("总记录数：", result.total);
+                if(result.data=="已经点赞")
+                {
+                  self.likeflag=true;
+                }
+                else if(result.data=="尚未点赞")
+                {
+                  self.likeflag=false;
+                }
+
+              } else if (result.code === 400) {
+                alert("error");
+                location.reload();
+              }
+            })
+            .catch(function (error) {
+              console.log("请求错误：", error);
+            });
+      },
       collectpicture(){
         let self = this;
-        if(this.picturecreatid==this.USERID)
-        {self.downloadImg()}
-        else
-        {
           let mycollect = {
             vwpId: this.pictureid,
             userId: this.USERID,
           };
-          this.$axios.post('http://localhost:8090/mycollect/collect', mycollect)     ////////////////////////////////////登录信息
+          this.$axios.post('http://localhost:8090/mycollect/doCollect', mycollect)     ////////////////////////////////////登录信息
               .then(function (response) {
                 let result = response.data;
                 if (result.code === 200) {
                   console.log("登录成功！");
                   console.log("返回的数据：", result.data);
                   console.log("总记录数：", result.total);
-                  self.downloadImg();
-
-                } else if (result.code === 400) {
-                  if (result.msg == "你还没购买过该壁纸") {
-                    alert("您还没购买过该壁纸，无法下载");
+                  if(result.data=="成功收藏")
+                  {
+                    alert("收藏成功！");
                     location.reload();
                   }
+                  else if(result.data=="取消收藏")
+                  {
+                    alert("您已取消收藏");
+                    location.reload();
+                  }
+
+                } else if (result.code === 400) {
+                    alert("error");
+                    location.reload();
                 }
               })
               .catch(function (error) {
                 console.log("请求错误：", error);
               });
-        }
       },
       likepicture(){
         let self = this;
-        if(this.picturecreatid==this.USERID)
-        {self.downloadImg()}
-        else
-        {
-          let user = {
-            vwpId: this.pictureid,
-            userId: this.USERID,
-          };
-          this.$axios.post('http://localhost:8090/vwpdownload/download', user)     ////////////////////////////////////登录信息
-              .then(function (response) {
-                let result = response.data;
-                if (result.code === 200) {
-                  console.log("登录成功！");
-                  console.log("返回的数据：", result.data);
-                  console.log("总记录数：", result.total);
-                  self.downloadImg();
-
-                } else if (result.code === 400) {
-                  if (result.msg == "你还没购买过该壁纸") {
-                    alert("您还没购买过该壁纸，无法下载");
-                    location.reload();
-                  }
+        let mycollect = {
+          vwpId: this.pictureid,
+          userId: this.USERID,
+        };
+        this.$axios.post('http://localhost:8090/myfavourite/doFavourite', mycollect)     ////////////////////////////////////登录信息
+            .then(function (response) {
+              let result = response.data;
+              if (result.code === 200) {
+                console.log("登录成功！");
+                console.log("返回的数据：", result.data);
+                console.log("总记录数：", result.total);
+                if(result.data=="点赞成功")
+                {
+                  alert("点赞成功！感谢您对该壁纸的支持");
+                  location.reload();
                 }
-              })
-              .catch(function (error) {
-                console.log("请求错误：", error);
-              });
-        }
+                else if(result.data=="取消点赞")
+                {
+                  alert("您已取消点赞");
+                  location.reload();
+                }
+
+              } else if (result.code === 400) {
+
+                  alert("error");
+                  location.reload();
+              }
+            })
+            .catch(function (error) {
+              console.log("请求错误：", error);
+            });
       },
       loadpicture(){
         let self = this;
@@ -278,6 +402,10 @@ export default {
         toupload() {
             this.$router.push("/upload");
         },
+        refresh() {
+          sessionStorage.setItem('SEARCHTYPE', '')
+          location.reload();
+        },
         async postImagePrice() {
         let vwallpaper = {
 
@@ -332,7 +460,7 @@ body {
 .logo {
     font-size: 32px;
     font-weight: bold;
-    color: black;
+    color: #28e1f8;
 }
 
 .nav {
@@ -346,7 +474,7 @@ body {
 
 .nav button {
   text-decoration: none;
-  color: black;
+  color: #28e1f8;
   font-size: 20px;
   font-weight: 600;
   border: none;
@@ -354,7 +482,7 @@ body {
 }
 
 .nav button:hover {
-  color: #0099ff;
+  color: #ff0062;
   cursor: pointer;
 }
 
@@ -434,9 +562,15 @@ body {
     font-size: 16px;
 }
 .info button:hover {
-    background-color: #0066cc;
+  background-color: #cc8b00;
     cursor: pointer;
 }
+
+
+.info img:hover {
+  cursor: pointer;
+}
+
 
 .footer {
     display: flex;

@@ -3,8 +3,10 @@ package com.example.wallpaper.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.wallpaper.common.Result;
+import com.example.wallpaper.entity.Myfavourite;
 import com.example.wallpaper.entity.User;
 import com.example.wallpaper.entity.Vwallpaper;
+import com.example.wallpaper.service.MyfavouriteService;
 import com.example.wallpaper.service.VwallpaperService;
 import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -43,6 +43,9 @@ public class VwallpaperController {
 
     @Autowired
     private VwallpaperService vwallpaperService;
+
+    @Autowired
+    private MyfavouriteService myfavouriteService;
 
 
     @PostMapping(value = "/upload",consumes = "multipart/form-data")
@@ -189,6 +192,73 @@ public class VwallpaperController {
         lambdaQueryWrapper.eq(Vwallpaper::getVwpId,vwallpaper.getVwpId());
 
         return Result.suc(vwallpaperService.list(lambdaQueryWrapper));
+    }
+
+
+    @PostMapping("/getImagesByrecommend")
+    public Result getImagesByrecommend(@RequestBody User user){
+
+        if( user.getUserId()==null ||
+                user.getUserId().equals("null") ||
+                user.getUserId().equals("")){
+            return Result.fail("信息不全");
+        }
+
+        LambdaQueryWrapper<Myfavourite> lambdaQueryWrapper1=new LambdaQueryWrapper();
+        lambdaQueryWrapper1.eq(Myfavourite::getUserId,user.getUserId());
+
+        List<Myfavourite> myfavourites = new ArrayList<>();
+        myfavourites=myfavouriteService.list(lambdaQueryWrapper1);
+
+
+        List<Vwallpaper> TempVwallpapers=new ArrayList<>();
+        for(int i=0;i<myfavourites.size();i++){
+            TempVwallpapers.add( vwallpaperService.getById(myfavourites.get(i).getVwpId()));
+        }
+
+        //-------------------------根据vwallpapers1寻找前三位喜欢--------------------------------
+        Map<String, Long> typeCountMap = TempVwallpapers.stream()
+                .collect(Collectors.groupingBy(Vwallpaper::getType, Collectors.counting()));
+
+        // 将Map按照value降序排序
+        List<Map.Entry<String, Long>> sortedList = typeCountMap.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .collect(Collectors.toList());
+
+        // 获取前三位
+        List<Map.Entry<String, Long>> topThree = sortedList.stream().limit(3).collect(Collectors.toList());
+
+
+        // 打印结果
+        for (Map.Entry<String, Long> entry : topThree) {
+            System.out.println("Type: " + entry.getKey() + ", Count: " + entry.getValue());
+        }
+        //-------------------------根据vwallpapers1寻找前三位喜欢------------------------------------
+
+
+
+
+        List<Vwallpaper> ReturnVwallpapers=new ArrayList<>();
+
+
+
+        for (Map.Entry<String, Long> entry : topThree) {
+
+            LambdaQueryWrapper<Vwallpaper> lambdaQueryWrapper2=new LambdaQueryWrapper();
+            lambdaQueryWrapper2.eq(Vwallpaper::getType,entry.getKey());
+
+            System.out.println(vwallpaperService.list(lambdaQueryWrapper2));
+
+            ReturnVwallpapers.addAll(vwallpaperService.list(lambdaQueryWrapper2));
+        }
+
+        Collections.shuffle(ReturnVwallpapers);
+
+        if(ReturnVwallpapers.size()==0){
+            return Result.fail("查找不到它所喜欢");
+        }else{
+            return Result.suc(ReturnVwallpapers);
+        }
     }
 
 

@@ -4,11 +4,11 @@
             <div class="logo">壁纸引擎--上传</div>
             <div class="nav">
                 <button @click="toindex">首页</button>
-                <button>分类</button>
+                <button @click="refresh">刷新</button>
                 <button @click="refresh">上传</button>
                 <div class="userimgbox">
                     <img src="../assets/bg.jpg" alt="" width="25" @click="touser">
-                    <div>{{ this.NAME }}</div>
+                    <div style=" color: #28e1f8;">{{ this.NAME }}</div>
                 </div>
             </div>
         </div>
@@ -223,7 +223,7 @@ export default {
 .logo {
     font-size: 32px;
     font-weight: bold;
-    color: black;
+    color: #28e1f8;
 }
 
 .nav {
@@ -237,7 +237,7 @@ export default {
 
 .nav button {
     text-decoration: none;
-  color: black;
+  color: #28e1f8;
   font-size: 20px;
   font-weight: 600;
     border: none;
@@ -245,7 +245,7 @@ export default {
 }
 
 .nav button:hover {
-    color: #0099ff;
+    color: #ff0062;
     cursor: pointer;
 }
 
